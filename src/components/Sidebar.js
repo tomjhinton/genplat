@@ -1,7 +1,6 @@
 import React from 'react'
 
 
-
 class Sidebar extends React.Component {
 
 
@@ -12,23 +11,12 @@ class Sidebar extends React.Component {
 
     }
 
-
-
   }
-
-
-
-
 
   componentDidMount() {
 
-    console.log(this.props)
-
 
   }
-
-
-
 
 
   render() {

@@ -1,11 +1,7 @@
 
 import React from 'react'
-export const resourcesArr = []
-
 import 'bulma'
-
 import {Spring} from 'react-spring/renderprops'
-
 
 
 const scores = []
@@ -55,46 +51,40 @@ class Main extends React.Component {
     ctx.globalAlpha = 0.2
     ctx.fillStyle = this.state.background
     ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-
     ctx.fillStyle = this.state.player.colour
     ctx.beginPath()
     ctx.rect(this.state.player.x, this.state.player.y, this.state.player.width ,this.state.player.height)
     ctx.fill()
     ctx.stroke()
+
   }
-  //console.log(ctx.getImageData(10, 10, 1, 1))
 
 
   update(){
     const player  = this.state.player
     const canvas = document.getElementById('canvas')
+
     if(this.state.playing){
       this.setState({ player: {...player,
         x: player.x +player.velX,
         y: player.y+player.velY
       } })
-    }
 
+    }
 
     if(player.y >= this.state.height-player.height){
 
       canvas.classList.remove('spin')
       this.setState( {playing: false })
 
-    } else
-    if(player.y <= 0){
+    } else if(player.y <= 0){
       canvas.classList.remove('spin')
       this.setState( {playing: false })
 
-    }
-
-
-    if(player.x >= this.state.width-player.width){
+    }else if(player.x >= this.state.width-player.width){
       canvas.classList.remove('spin')
       this.setState( {playing: false })
-    } else
-    if(player.x <= 0){
+    } else if(player.x <= 0){
       canvas.classList.remove('spin')
       this.setState( {playing: false })
 
@@ -108,9 +98,7 @@ class Main extends React.Component {
 
 
     if(this.state.score >this.state.highscore ){
-
       const score = document.getElementById('score')
-
       score.classList.add('pulsate')
     }
 
