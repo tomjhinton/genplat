@@ -20,22 +20,22 @@
     -webkit-animation: pulsate 3s ease-out;
     -webkit-animation-iteration-count: infinite;
     opacity: 0.5;
-    font-size: 3em;
+    font-size: 3*2vh;
 }
 @-webkit-keyframes pulsate {
     0% {
         opacity: 0.5;
-        font-size: 3em;
+        font-size: 3*2vh;
         color: #eebdea;
     }
     50% {
         opacity: 1.0;
-        font-size: 4em;
+        font-size: 4*2vh;
         color: #bdeeee;
     }
     100% {
         opacity: 0.5;
-        font-size: 3em;
+        font-size: 3*2vh;
         color: #eebdea;
     }
 }
@@ -67,15 +67,15 @@ animation: AnimationName 4s ease infinite;
 }
 
 .score{
-  font-size: 2em;
+  font-size: 2*2vh;
   color: #eebdea
 }
 
 .sidebar{
-  padding-top: 1em;
+  padding-top: 1*2vh;
   display: flex;
   flex-wrap: wrap;
-  font-size:2em;
+  font-size:2*2vh;
   font-weight: bold;
 
   align-content: flex-start;
@@ -84,7 +84,7 @@ animation: AnimationName 4s ease infinite;
   color: rgba(255,255,255,0.9);
   .stat{
     font-weight: normal;
-    font-size: 1em;
+    font-size: 1*2vh;
   }
 
 }
