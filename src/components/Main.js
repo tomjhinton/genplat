@@ -38,6 +38,12 @@ class Main extends React.Component {
     this.checkKey = this.checkKey.bind(this)
     this.update = this.update.bind(this)
     this.random = this.random.bind(this)
+    this.reset = this.reset.bind(this)
+    this.up = this.up.bind(this)
+    this.down = this.down.bind(this)
+    this.left = this.left.bind(this)
+    this.right = this.right.bind(this)
+    this.touchControl = this.touchControl.bind(this)
 
 
   }
@@ -111,7 +117,9 @@ class Main extends React.Component {
   }
 
   componentDidMount() {
+    const canvas = document.getElementById('canvas')
     document.addEventListener('keydown', this.checkKey)
+    canvas.addEventListener('touchstart', this.touchControl)
     this.interval2 = setInterval(() => {
 
       this.update()
@@ -134,63 +142,112 @@ class Main extends React.Component {
 
     if (e.keyCode === 38 || e.keyCode === 32) {
       // up arrow
+      this.up()
 
-      this.setState({ player: {...this.state.player, velY: -this.state.player.speed*2 } })
-
-      this.draw()
     }else if (e.keyCode === 40) {
       // down arrow
-      this.setState({ player: {...this.state.player, velY: +this.state.player.speed*2 } })
-      this.draw()
+      this.down()
 
     } else if (e.keyCode === 37) {
       // left arrow
 
-      if (this.state.player.velX > -this.state.player.speed) {
-        this.setState({ player: {...this.state.player, velX: -this.state.player.speed*2 } })
-      }
+      this.left()
 
 
-      this.draw()
 
     }else if (e.keyCode === 39) {
       // right arrow
+      this.right()
 
-      if (this.state.player.velX < this.state.player.speed) {
-        this.setState({ player: {...this.state.player, velX: +this.state.player.speed*2 } })
-      }
-      this.draw()
 
     }else if (e.keyCode === 82) {
       //R
-      const score = document.getElementById('score')
-
-      score.classList.remove('pulsate')
-      scores.push(this.state.score)
-      if(this.state.score  >this.state.highscore){
-        this.setState( {highscore: this.state.score, score: 0 })
-      }
-      if(this.state.score  <=this.state.highscore){
-        this.setState( {score: 0 })
-      }
-      const canvas = document.getElementById('canvas')
-
-      canvas.classList.add('spin')
-      this.setState( {playing: true })
-      this.setState( {player: {...this.state.player,
-        speed: 2,
-        x: 50,
-        y: 100,
-        velX: 5,
-        velY: 5
-      },
-      scores: [...scores],
-      gamesPlayed: this.state.gamesPlayed+1 })
-      this.props.onChange(this.state)
+      this.reset()
     }
   }
 
+  up(){
+    this.setState({ player: {...this.state.player, velY: -this.state.player.speed*2 } })
 
+    this.draw()
+  }
+
+  down(){
+    this.setState({ player: {...this.state.player, velY: +this.state.player.speed*2 } })
+    this.draw()
+  }
+
+  left(){
+    if (this.state.player.velX > -this.state.player.speed) {
+      this.setState({ player: {...this.state.player, velX: -this.state.player.speed*2 } })
+      this.draw()
+    }
+  }
+
+  right(){
+    if (this.state.player.velX < this.state.player.speed) {
+      this.setState({ player: {...this.state.player, velX: +this.state.player.speed*2 } })
+    }
+    this.draw()
+  }
+
+  touchControl(e){
+    const canvas = document.getElementById('canvas')
+
+    if(parseInt(e.touches[0].pageY)-parseInt(canvas.getBoundingClientRect().y) > parseInt(this.state.player.y) ){
+      this.down()
+
+    }
+
+    if(parseInt(e.touches[0].pageY)-parseInt(canvas.getBoundingClientRect().y) < this.state.player.y){
+      this.up()
+    }
+
+
+    if(parseInt(e.touches[0].pageX)-parseInt(canvas.getBoundingClientRect().x) > parseInt(this.state.player.x) ){
+      this.right()
+
+    }
+
+    if(parseInt(e.touches[0].pageX)-parseInt(canvas.getBoundingClientRect().x) < this.state.player.x){
+      this.left()
+    }
+
+    // console.log(e.touches[0].pageX + ' e.tocuhe')
+    // console.log(this.state.player.x + ' player')
+    // console.log(canvas.getBoundingClientRect().x  +' bb')
+    // console.log(parseInt(e.touches[0].pageX)-parseInt(canvas.getBoundingClientRect().x))
+    //
+    console.log(parseInt(e.touches[0].pageY)-parseInt(canvas.getBoundingClientRect().y))
+    console.log(parseInt(this.state.player.y))
+  }
+
+  reset(){
+    const score = document.getElementById('score')
+
+    score.classList.remove('pulsate')
+    scores.push(this.state.score)
+    if(this.state.score  >this.state.highscore){
+      this.setState( {highscore: this.state.score, score: 0 })
+    }
+    if(this.state.score  <=this.state.highscore){
+      this.setState( {score: 0 })
+    }
+    const canvas = document.getElementById('canvas')
+
+    canvas.classList.add('spin')
+    this.setState( {playing: true })
+    this.setState( {player: {...this.state.player,
+      speed: 2,
+      x: 50,
+      y: 100,
+      velX: 5,
+      velY: 5
+    },
+    scores: [...scores],
+    gamesPlayed: this.state.gamesPlayed+1 })
+    this.props.onChange(this.state)
+  }
 
   render(){
 
@@ -198,7 +255,7 @@ class Main extends React.Component {
 
       <div className="container" onKeyDown={this.checkKey}>
         <div id='score' className="score"> {this.state.score}</div>
-        {!this.state.playing  && <div className="pulsate"> R TO RESET</div>}
+        {!this.state.playing  && <div className="pulsate" onClick={this.reset}> R TO RESET</div>}
         <canvas id="canvas" width={640} height={425} onKeyDown={this.checkKey}  className="spin"/>
       </div>
     )
