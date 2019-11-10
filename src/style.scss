@@ -1,3 +1,91 @@
-canvas{
-  animation: rotation 2s infinite linear;
+.spin{
+  animation: rotation 25s infinite linear;
+}
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+
+.pulsate {
+    -webkit-animation: pulsate 3s ease-out;
+    -webkit-animation-iteration-count: infinite;
+    opacity: 0.5;
+    font-size: 3em;
+}
+@-webkit-keyframes pulsate {
+    0% {
+        opacity: 0.5;
+        font-size: 3em;
+        color: #eebdea;
+    }
+    50% {
+        opacity: 1.0;
+        font-size: 4em;
+        color: #bdeeee;
+    }
+    100% {
+        opacity: 0.5;
+        font-size: 3em;
+        color: #eebdea;
+    }
+}
+
+.sidebar{
+  height:80vh;
+  background: linear-gradient(147deg, #eebdea, #e0eebd, #bdeeee);
+  background-size: 600% 600%;
+
+-webkit-animation: AnimationName 4s ease infinite;
+-moz-animation: AnimationName 4s ease infinite;
+animation: AnimationName 4s ease infinite;
+
+@-webkit-keyframes AnimationName {
+    0%{background-position:45% 0%}
+    50%{background-position:56% 100%}
+    100%{background-position:45% 0%}
+}
+@-moz-keyframes AnimationName {
+    0%{background-position:45% 0%}
+    50%{background-position:56% 100%}
+    100%{background-position:45% 0%}
+}
+@keyframes AnimationName {
+    0%{background-position:45% 0%}
+    50%{background-position:56% 100%}
+    100%{background-position:45% 0%}
+}
+}
+
+.score{
+  font-size: 2em;
+}
+
+.sidebar{
+  padding-top: 1em;
+  display: flex;
+  flex-wrap: wrap;
+  font-size:2em;
+  font-weight: bold;
+
+  align-content: flex-start;
+  justify-content: center;
+  margin: auto;
+  color: rgba(255,255,255,0.9);
+  .stat{
+    font-weight: normal;
+    font-size: 1em;
+  }
+
+}
+
+hr{
+  border: 1px solid rgba(255,255,255,0.7);
+  background-color: rgba(255,255,255,0.7);
+  width:80%;
+
 }

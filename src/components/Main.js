@@ -4,6 +4,12 @@ export const resourcesArr = []
 
 import 'bulma'
 
+import {Spring} from 'react-spring/renderprops'
+
+
+
+const scores = []
+
 
 
 class Main extends React.Component {
@@ -16,19 +22,20 @@ class Main extends React.Component {
       width: 640,
       playing: true,
       player: {
-        height: 20,
-        width: 10,
+        height: 50,
+        width: 50,
         x: 50,
         y: 100,
-        velX: 0,
-        velY: 0,
-        speed: 8,
-        colour: 'black'
+        velX: 5,
+        velY: 5,
+        speed: 2,
+        colour: '#'+Math.floor(Math.random()*16777215).toString(16)
       },
-      friction: 0.2,
-      gravity: 0.2,
-      background: 'blue',
-      shapes: [1,2,3]
+      background: '#'+Math.floor(Math.random()*16777215).toString(16),
+      score: 0,
+      highscore: 0,
+      gamesPlayed: 0,
+      scoreAverage: []
     }
 
 
@@ -49,62 +56,63 @@ class Main extends React.Component {
     ctx.fillStyle = this.state.background
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    for(let i=0; i< this.state.shapes.length;i++){
-      ctx.fillStyle = '#'+Math.floor(Math.random()*16777215).toString(16)
-      ctx.beginPath()
-    ctx.rect(this.state.player.x+(i*10), this.state.player.y+(Math.floor(Math.random() * 5+ 5)*10), this.state.player.width+(Math.floor(Math.random() * 5+ 5)*i),this.state.player.height+(Math.floor(Math.random() * 5+ 5)*i))
+
+    ctx.fillStyle = this.state.player.colour
+    ctx.beginPath()
+    ctx.rect(this.state.player.x, this.state.player.y, this.state.player.width ,this.state.player.height)
     ctx.fill()
     ctx.stroke()
   }
-    //console.log(ctx.getImageData(10, 10, 1, 1))
-  }
+  //console.log(ctx.getImageData(10, 10, 1, 1))
+
 
   update(){
     const player  = this.state.player
-
-    this.setState({ player: {...player,
-      x: player.x +player.velX,
-      y: player.y+player.velY
-    } })
-
-
-    if(player.y >= this.state.height){
-      (console.log('top'))
-
+    const canvas = document.getElementById('canvas')
+    if(this.state.playing){
       this.setState({ player: {...player,
-        y: -10
+        x: player.x +player.velX,
+        y: player.y+player.velY
       } })
-      this.random()
+    }
+
+
+    if(player.y >= this.state.height-player.height){
+
+      canvas.classList.remove('spin')
+      this.setState( {playing: false })
+
     } else
-    if(player.y < -10){
-
-      this.setState({ player: {...player,
-
-        y: this.state.height-(player.height/10)
-      }, shapes: [...this.state.shapes,1,2,3] }
-      )
-      this.random()
+    if(player.y <= 0){
+      canvas.classList.remove('spin')
+      this.setState( {playing: false })
 
     }
 
 
-    if(player.x >= this.state.width){
-      this.setState({ player: {...player,
-        x: -player.width
-      } })
-      this.random()
+    if(player.x >= this.state.width-player.width){
+      canvas.classList.remove('spin')
+      this.setState( {playing: false })
     } else
-    if(player.x < -player.width){
-      this.setState({ player: {...player,
-        x: this.state.width-(player.width/10)
-      }, shapes: [...this.state.shapes,1,2,3] })
-      this.random()
+    if(player.x <= 0){
+      canvas.classList.remove('spin')
+      this.setState( {playing: false })
+
     }
 
 
+    if(this.state.score %10 === 0 && this.state.score >0){
+      this.random()
+      this.setState( {player: {...this.state.player,speed: this.state.player.speed+0.1} })
+    }
 
 
+    if(this.state.score >this.state.highscore ){
 
+      const score = document.getElementById('score')
+
+      score.classList.add('pulsate')
+    }
 
     this.draw()
   }
@@ -120,6 +128,12 @@ class Main extends React.Component {
 
       this.update()
     }, 100)
+
+    this.interval2 = setInterval(() => {
+      if(this.state.playing){
+        this.setState( {score: this.state.score+1 })
+      }
+    }, 1000)
 
 
 
@@ -161,19 +175,43 @@ class Main extends React.Component {
 
     }else if (e.keyCode === 82) {
       //R
+      const score = document.getElementById('score')
 
-      this.setState({ player: {...this.state.player, colour: '#'+Math.floor(Math.random()*16777215).toString(16),height: (Math.floor(Math.random() * 5+ 5)*10), width: (Math.floor(Math.random() * 5+ 5)*10) }, background:   '#'+Math.floor(Math.random()*16777215).toString(16) })
+      score.classList.remove('pulsate')
+      scores.push(this.state.score)
+      if(this.state.score  >this.state.highscore){
+        this.setState( {highscore: this.state.score, score: 0 })
+      }
+      if(this.state.score  <=this.state.highscore){
+        this.setState( {score: 0 })
+      }
+      const canvas = document.getElementById('canvas')
 
+      canvas.classList.add('spin')
+      this.setState( {playing: true })
+      this.setState( {player: {...this.state.player,
+        speed: 2,
+        x: 50,
+        y: 100,
+        velX: 5,
+        velY: 5
+      },
+      scores: [...scores],
+      gamesPlayed: this.state.gamesPlayed+1 })
+      this.props.onChange(this.state)
     }
   }
 
 
 
   render(){
+
     return(
 
       <div className="container" onKeyDown={this.checkKey}>
-        <canvas id="canvas" width={640} height={425} onKeyDown={this.checkKey} />
+        <div id='score' className="score"> {this.state.score}</div>
+        {!this.state.playing  && <div className="pulsate"> R TO RESET</div>}
+        <canvas id="canvas" width={640} height={425} onKeyDown={this.checkKey}  className="spin"/>
       </div>
     )
   }
