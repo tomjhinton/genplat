@@ -21,7 +21,7 @@ class Home extends React.Component {
   }
 
   onStatsChange(data){
-
+    console.log(data)
     this.setState({ data: data
     } )
 

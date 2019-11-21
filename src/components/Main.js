@@ -187,56 +187,48 @@ class Main extends React.Component {
   right(){
     if (this.state.player.velX < this.state.player.speed) {
       this.setState({ player: {...this.state.player, velX: +this.state.player.speed*2 } })
+      this.draw()
     }
-    this.draw()
+
   }
 
   touchControl(e){
     const canvas = document.getElementById('canvas')
 
-    if(parseInt(e.touches[0].pageY)-parseInt(canvas.getBoundingClientRect().y) > parseInt(this.state.player.y) ){
+    if(e.touches[0].pageY-canvas.getBoundingClientRect().y > this.state.player.y ){
       this.down()
 
     }
 
-    if(parseInt(e.touches[0].pageY)-parseInt(canvas.getBoundingClientRect().y) < this.state.player.y){
+    if(e.touches[0].pageY-canvas.getBoundingClientRect().y < this.state.player.y){
       this.up()
     }
 
 
-    if(parseInt(e.touches[0].pageX)-parseInt(canvas.getBoundingClientRect().x) > parseInt(this.state.player.x) ){
+    if(e.touches[0].pageX-canvas.getBoundingClientRect().x > this.state.player.x ){
       this.right()
 
     }
 
-    if(parseInt(e.touches[0].pageX)-parseInt(canvas.getBoundingClientRect().x) < this.state.player.x){
+    if(e.touches[0].pageX-canvas.getBoundingClientRect().x < this.state.player.x){
       this.left()
     }
 
-    // console.log(e.touches[0].pageX + ' e.tocuhe')
-    // console.log(this.state.player.x + ' player')
-    // console.log(canvas.getBoundingClientRect().x  +' bb')
-    // console.log(parseInt(e.touches[0].pageX)-parseInt(canvas.getBoundingClientRect().x))
-    //
-    console.log(parseInt(e.touches[0].pageY)-parseInt(canvas.getBoundingClientRect().y))
-    console.log(parseInt(this.state.player.y))
+
   }
 
   reset(){
     const score = document.getElementById('score')
-
+    console.log(this.state)
     score.classList.remove('pulsate')
     scores.push(this.state.score)
-    if(this.state.score  >this.state.highscore){
+    if(this.state.score  >  this.state.highscore){
       this.setState( {highscore: this.state.score, score: 0 })
     }
     if(this.state.score  <=this.state.highscore){
       this.setState( {score: 0 })
     }
-    const canvas = document.getElementById('canvas')
 
-    canvas.classList.add('spin')
-    this.setState( {playing: true })
     this.setState( {player: {...this.state.player,
       speed: 2,
       x: 50,
@@ -247,6 +239,9 @@ class Main extends React.Component {
     scores: [...scores],
     gamesPlayed: this.state.gamesPlayed+1 })
     this.props.onChange(this.state)
+    this.setState( {playing: true })
+    const canvas = document.getElementById('canvas')
+    canvas.classList.add('spin')
   }
 
   render(){
